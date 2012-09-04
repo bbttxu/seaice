@@ -1,0 +1,36 @@
+- minima = data.collect{|x|x['measurement'].to_i}.min
+- maxima = data.collect{|x|x['measurement'].to_i}.max
+
+h1= year
+
+p
+  = minima
+p
+  = maxima
+
+p
+  = year
+  has 
+  = data.count
+  data points.
+table
+  tr
+    th year
+    th month
+    th day
+    th measurements
+    th units
+  - data.each do |datum|
+    tr
+      td
+        a href="/#{datum['year']}"
+          = datum['year']
+      td
+        a href="/#{[ datum['year'],  datum['month'] ].join("/")}"
+          = datum['month']
+      td
+        a href="/#{[ datum['year'],  datum['month'], datum['day'] ].join("/")}"
+          = datum['day']
+      td= datum['measurement']
+      td km/2
+
