@@ -1,0 +1,53 @@
+- current = historical.reject{|year| year['year'] != data[0]['year']}.min
+- sorted = historical.collect{|x| [x['year'].to_i, x['measurement'].to_i]}.sort
+
+- x_axis = sorted.collect{|x|x[0]}
+- y_axis = sorted.collect{|x|x[1]}
+
+- lr = LinearRegression.new( x_axis, y_axis )
+- fitted_array = lr.fit
+
+- x_axis_min = x_axis.min - 1
+- x_axis_max = Time.now.year.to_i
+- x_values = x_axis.collect{|x| 100.0 * (1 + x - x_axis.min) / (x_axis_max - x_axis_min)}
+
+
+- y_axis_min = ((y_axis.min / 1000000).to_f.floor.to_i - 1) * 1000000
+- # y_axis_min = 0
+- y_axis_max = (y_axis.max / 1000000 + 1) * 1000000
+- y_values = y_axis.collect{|y| 100.0 * (y - y_axis_min) / (y_axis_max - y_axis_min)}
+- y_fitted_values = x_axis.collect{|x| 100.0 * (lr.predict(x) - y_axis_min) / (y_axis_max - y_axis_min)}
+
+
+.twelve.columns
+  h1 = "Data for #{data[0]['year']}"
+  p = "2009 was #{historical.count - historical.index(data[0]) + 1} lowest for #{Time.now.strftime('%Y %M %d')}"
+.six.columns
+  img src="https://chart.googleapis.com/chart?cht=s&chd=t:#{x_values.join(',')},#{x_values.join(',')}|#{y_values.join(',')},#{y_fitted_values.join(',')}&chs=400x300&chco=FF0000&chxr=0,#{x_axis_min},#{x_axis_max},1|1,#{y_axis_min},#{y_axis_max},1000000&chxt=x,y&chm=o,0000FF,0,-1,0|o,FF0000,0,0:#{y_axis.count - 1}:,5|D,000000,1,#{y_axis.count}:,1,-1"
+  caption = "y = #{lr.offset} + #{lr.slope}x"
+
+.six.columns
+  table 
+    tr
+      th year
+      th month
+      th day
+      th Sea Ice Extent
+      th == "&#916; with #{year}" 
+    - historical.each do |historical_year|
+      - current_class = 'current' if  historical_year['year'] == data[0]['year']
+      tr( class=current_class.to_s )
+        td
+          a href="/#{historical_year['year']}"
+            = historical_year['year']
+        td
+          a href="/#{[ historical_year['year'],  historical_year['month'] ].join("/")}"
+            = historical_year['month']
+        td
+          a href="/#{[ historical_year['year'],  historical_year['month'], historical_year['day'] ].join("/")}"
+            = historical_year['day']
+        td= historical_year['measurement']
+        td= historical_year['measurement'].to_i - current['measurement'].to_i
+        td= (100.0 * historical_year['measurement'] / current['measurement']).to_f.precision(2)
+
+

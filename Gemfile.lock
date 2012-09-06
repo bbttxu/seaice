@@ -42,6 +42,7 @@ GEM
     rack-tidy (0.2.0)
       rack (>= 1.0.0)
       tidy (>= 1.1.2)
+    sass (3.1.20)
     sinatra (1.3.3)
       rack (~> 1.3, >= 1.3.6)
       rack-protection (~> 1.2)
@@ -68,6 +69,7 @@ DEPENDENCIES
   mongo_mapper
   rack
   rack-tidy
+  sass
   sinatra
   slim
   tidy

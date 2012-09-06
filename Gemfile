@@ -8,6 +8,7 @@ gem 'httparty'
 gem "sinatra"
 gem "slim"
 gem "haml"
+gem "sass"
 gem "coffee-script"
 
 gem "bson_ext"

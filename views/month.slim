@@ -1,6 +1,4 @@
 
-
-
 - sorted = data.collect{|x| [Date.new(y=x['year'],m=x['month'],d=x['day']).yday, x['measurement'].to_i]}.sort
 
 - x_axis = sorted.collect{|x|x[0]}
@@ -16,22 +14,19 @@
 
 
 - y_axis_min = ((y_axis.min / 1000000).to_f.floor.to_i - 1) * 1000000
-- y_axis_max = (y_axis.max / 1000000 + 2) * 1000000
+- y_axis_min = 0
+- y_axis_max = (y_axis.max / 1000000 + 1) * 1000000
 - y_values = y_axis.collect{|y| 100.0 * (y - y_axis_min) / (y_axis_max - y_axis_min)}
+- y_fitted_values = x_axis.collect{|x| 100.0 * (lr.predict(x) - y_axis_min) / (y_axis_max - y_axis_min)}
 
-- x_values = x_values.collect{|x| x.to_f.precision(0) }
-- y_values = y_values.collect{|x| x.to_f.precision(0) }
+- x_values = x_values.collect{|x| x.to_f.precision(2) }
+- y_values = y_values.collect{|x| x.to_f.precision(2) }
+- y_fitted_values = y_fitted_values.collect{|x| x.to_f.precision(2) }
 
-img src="https://chart.googleapis.com/chart?cht=s&chd=t:#{x_values.join(',')}|#{y_values.join(',')}&chs=400x300&chco=FF0000&chxr=0,#{x_axis_min},#{x_axis_max},1|1,#{y_axis_min},#{y_axis_max},1000000&chxt=x,y&o,FF0000,0,0:#{y_axis.count - 1}:,5"
+img src="https://chart.googleapis.com/chart?cht=s&chd=t:#{x_values.join(',')},#{x_values.join(',')}|#{y_values.join(',')},#{y_fitted_values.join(',')}&chs=400x300&chco=FF0000&chxr=0,#{x_axis_min},#{x_axis_max},1|1,#{y_axis_min},#{y_axis_max},1000000&chxt=x,y&chm=o,0000FF,0,-1,0|o,FF0000,0,0:#{y_axis.count - 1}:,5|D,000000,1,#{y_axis.count}:,1,-1"
 caption = "y = #{lr.offset} + #{lr.slope}x"
 
-h1= year
-
-
-
-
-
-
+h1 = year
 
 - unless data.nil?
   - minima = data.collect{|x|x['measurement'].to_i}.min

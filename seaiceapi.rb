@@ -27,4 +27,13 @@ class SeaIceApi < Sinatra::Base
   get '/:year/:month.json' do
     Measurement.where(:year => params[:year].to_i,:month => params[:month].to_i).fields(:year, :month, :day, :measurement).sort( :year.asc, :month.asc, :day.asc).to_json
   end
+
+  get '/year/:month/:day.json' do
+    Measurement.where(:month => params[:month].to_i,:day => params[:day].to_i).fields(:year, :month, :day, :measurement).sort( :measurement.desc).to_json
+  end
+
+  get '/:year/:month/:day.json' do
+    Measurement.where(:year => params[:year].to_i,:month => params[:month].to_i,:day => params[:day].to_i).fields(:year, :month, :day, :measurement).sort( :year.asc, :month.asc, :day.asc).to_json
+  end
+
 end
